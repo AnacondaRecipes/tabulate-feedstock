@@ -13,13 +13,12 @@ source:
 
 build:
   number: 0
-  noarch: python
   script: python setup.py install --single-version-externally-managed --record record.txt
   entry_points:
     - tabulate = tabulate:_main
 
 requirements:
-  build:
+  host:
     - python
     - setuptools
   run:
