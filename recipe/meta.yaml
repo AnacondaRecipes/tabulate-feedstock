@@ -1,6 +1,5 @@
 {% set name = "tabulate" %}
 {% set version = "0.10.0" %}
-{% set sha256 = "e2cfde8f79420f6deeffdeda9aaec3b6bc5abce947655d17ac662b126e48a60d" %}
 
 package:
   name: {{ name|lower }}
@@ -8,11 +7,11 @@ package:
 
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: {{ sha256 }}
+  sha256: e2cfde8f79420f6deeffdeda9aaec3b6bc5abce947655d17ac662b126e48a60d
 
 build:
   number: 0
-  skip: true  # [py<37]
+  skip: true  # [py<310]
   script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation --ignore-installed --no-cache-dir -vv
   entry_points:
     - tabulate = tabulate:_main
@@ -21,19 +20,25 @@ requirements:
   host:
     - python
     - pip
-    - setuptools
-    - setuptools_scm
-    - wheel
+    - setuptools >=77.0.3
+    - setuptools_scm >=3.4.3
+    - toml
   run:
     - python
 
 test:
+  source_files:
+    - test
+    # OSError: b"$PREFIX/bin/python: can't open file '$SRC_DIR/tabulate/__init__.py': [Errno 2] No such file or directory\n"
+    - tabulate/__init__.py
   imports:
     - tabulate
   requires:
     - pip
+    - pytest
   commands:
     - pip check
+    - pytest test
     - tabulate --help
 
 about:
